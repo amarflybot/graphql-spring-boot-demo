@@ -8,6 +8,10 @@ import com.example.graphqlspringbootdemo.repository.BookRepository;
 import graphql.schema.DataFetchingEnvironment;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 
 @Component
 public class Query implements GraphQLQueryResolver {
@@ -24,8 +28,17 @@ public class Query implements GraphQLQueryResolver {
         return bookRepository.findAll();
     }
 
-    public Iterable<Author> findAllAuthors(DataFetchingEnvironment dataFetchingEnvironment) {
-        return authorRepository.findAll();
+    public Iterable<Author> findAllAuthors(Long id, DataFetchingEnvironment dataFetchingEnvironment) {
+        if (id == null) {
+
+            return authorRepository.findAll();
+        } else {
+            List<Author> authorList = new ArrayList<>();
+
+            Optional<Author> byId = authorRepository.findById(id);
+            authorList.add(byId.get());
+            return authorList;
+        }
     }
 
     public long countBooks(DataFetchingEnvironment dataFetchingEnvironment) {

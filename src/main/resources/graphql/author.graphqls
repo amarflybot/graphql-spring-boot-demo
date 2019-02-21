@@ -5,7 +5,7 @@ type Author {
 }
 
 type Query {
-  findAllAuthors: [Author]!
+  findAllAuthors(id: ID): [Author]!
   countAuthors: Long!
 }
 
