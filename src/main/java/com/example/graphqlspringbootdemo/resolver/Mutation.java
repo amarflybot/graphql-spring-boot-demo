@@ -6,21 +6,24 @@ import com.example.graphqlspringbootdemo.domain.Book;
 import com.example.graphqlspringbootdemo.exception.BookNotFoundException;
 import com.example.graphqlspringbootdemo.repository.AuthorRepository;
 import com.example.graphqlspringbootdemo.repository.BookRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+import java.util.Arrays;
+import java.util.Optional;
+
+@Service
 public class Mutation implements GraphQLMutationResolver {
 
     private BookRepository bookRepository;
     private AuthorRepository authorRepository;
 
-    public Mutation(AuthorRepository authorRepository, BookRepository bookRepository) {
+    public Mutation(final AuthorRepository authorRepository, final BookRepository bookRepository) {
         this.authorRepository = authorRepository;
         this.bookRepository = bookRepository;
     }
 
-    public Author newAuthor(String firstName, String lastName) {
-        Author author = new Author();
+    public Author newAuthor(final String firstName, final String lastName) {
+        final Author author = new Author();
         author.setFirstName(firstName);
         author.setLastName(lastName);
 
@@ -29,11 +32,12 @@ public class Mutation implements GraphQLMutationResolver {
         return author;
     }
 
-    public Book newBook(String title, String isbn, Integer pageCount, Long authorId) {
-        Book book = new Book();
-        book.setAuthor(new Author(authorId));
+    public Book newBook(final String title, final String isbn, final Integer pageCount, final Long authorId) {
+        final Book book = new Book();
+        Optional<Author> byId = authorRepository.findById(authorId);
+        book.setAuthors(Arrays.asList(byId.get()));
         book.setTitle(title);
-        book.setIsbn(isbn);
+        book.setGenre(isbn);
         book.setPageCount(pageCount != null ? pageCount : 0);
 
         bookRepository.save(book);
@@ -41,13 +45,13 @@ public class Mutation implements GraphQLMutationResolver {
         return book;
     }
 
-    public boolean deleteBook(Long id) {
+    public boolean deleteBook(final Long id) {
         bookRepository.deleteById(id);
         return true;
     }
 
-    public Book updateBookPageCount(Integer pageCount, Long id) {
-        Book book = bookRepository.findById(id).get();
+    public Book updateBookPageCount(final Integer pageCount, final Long id) {
+        final Book book = bookRepository.findById(id).get();
         if(book == null) {
             throw new BookNotFoundException("The book to be updated was not found", id);
         }

@@ -1,14 +1,15 @@
 type Book {
     id: ID!
     title: String!
-    isbn: String!
     pageCount: Int
-    author: Author
+    publisher: String
+    authors: [Author]!
 }
 
 extend type Query {
     findAllBooks: [Book]!
-    countBooks: Long!
+    findBookById(id: ID): [Book]!
+    countBooks: Int!
 }
 
 extend type Mutation {

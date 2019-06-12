@@ -12,7 +12,7 @@ public class BookNotFoundException extends RuntimeException implements GraphQLEr
 
     private Map<String, Object> extensions = new HashMap<>();
 
-    public BookNotFoundException(String message, Long invalidBookId) {
+    public BookNotFoundException(final String message, final Long invalidBookId) {
         super(message);
         extensions.put("invalidBookId", invalidBookId);
     }

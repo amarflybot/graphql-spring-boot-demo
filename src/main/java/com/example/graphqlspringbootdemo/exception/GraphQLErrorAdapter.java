@@ -1,6 +1,6 @@
 package com.example.graphqlspringbootdemo.exception;
 
-import graphql.ErrorType;
+import graphql.ErrorClassification;
 import graphql.ExceptionWhileDataFetching;
 import graphql.GraphQLError;
 import graphql.language.SourceLocation;
@@ -12,7 +12,7 @@ public class GraphQLErrorAdapter implements GraphQLError {
 
     private GraphQLError error;
 
-    public GraphQLErrorAdapter(GraphQLError error) {
+    public GraphQLErrorAdapter(final GraphQLError error) {
         this.error = error;
     }
 
@@ -27,7 +27,7 @@ public class GraphQLErrorAdapter implements GraphQLError {
     }
 
     @Override
-    public ErrorType getErrorType() {
+    public ErrorClassification getErrorType() {
         return error.getErrorType();
     }
 

@@ -18,23 +18,23 @@ public class AppConfig {
     public GraphQLErrorHandler errorHandler() {
         return new GraphQLErrorHandler() {
             @Override
-            public List<GraphQLError> processErrors(List<GraphQLError> errors) {
-                List<GraphQLError> clientErrors = errors.stream()
+            public List<GraphQLError> processErrors(final List<GraphQLError> errors) {
+                final List<GraphQLError> clientErrors = errors.stream()
                         .filter(this::isClientError)
                         .collect(Collectors.toList());
 
-                List<GraphQLError> serverErrors = errors.stream()
+                final List<GraphQLError> serverErrors = errors.stream()
                         .filter(e -> !isClientError(e))
                         .map(GraphQLErrorAdapter::new)
                         .collect(Collectors.toList());
 
-                List<GraphQLError> e = new ArrayList<>();
+                final List<GraphQLError> e = new ArrayList<>();
                 e.addAll(clientErrors);
                 e.addAll(serverErrors);
                 return e;
             }
 
-            protected boolean isClientError(GraphQLError error) {
+            protected boolean isClientError(final GraphQLError error) {
                 return !(error instanceof ExceptionWhileDataFetching || error instanceof Throwable);
             }
         };

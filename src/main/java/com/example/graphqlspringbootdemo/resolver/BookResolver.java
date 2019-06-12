@@ -5,18 +5,21 @@ import com.example.graphqlspringbootdemo.domain.Author;
 import com.example.graphqlspringbootdemo.domain.Book;
 import com.example.graphqlspringbootdemo.repository.AuthorRepository;
 import graphql.schema.DataFetchingEnvironment;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+import java.util.List;
+
+@Service
 public class BookResolver implements GraphQLResolver<Book> {
 
-    private AuthorRepository authorRepository;
+    private final AuthorRepository authorRepository;
 
-    public BookResolver(AuthorRepository authorRepository) {
+    public BookResolver(final AuthorRepository authorRepository) {
         this.authorRepository = authorRepository;
     }
 
-    public Author getAuthor(Book book, DataFetchingEnvironment dataFetchingEnvironment) {
-        return authorRepository.findById(book.getAuthor().getId()).get();
+    public List<Author> getAuthors(Book book, DataFetchingEnvironment dataFetchingEnvironment) {
+        List<Author> authorsByBook = this.authorRepository.findAuthorsByBook(book);
+        return authorsByBook;
     }
 }

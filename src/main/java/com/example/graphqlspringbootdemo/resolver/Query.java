@@ -7,44 +7,49 @@ import com.example.graphqlspringbootdemo.repository.AuthorRepository;
 import com.example.graphqlspringbootdemo.repository.BookRepository;
 import graphql.schema.DataFetchingEnvironment;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 
-@Component
+@Service
 public class Query implements GraphQLQueryResolver {
 
     private BookRepository bookRepository;
     private AuthorRepository authorRepository;
 
-    public Query(AuthorRepository authorRepository, BookRepository bookRepository) {
+    public Query(final AuthorRepository authorRepository, final BookRepository bookRepository) {
         this.authorRepository = authorRepository;
         this.bookRepository = bookRepository;
     }
 
-    public Iterable<Book> findAllBooks(DataFetchingEnvironment dataFetchingEnvironment) {
+    public Iterable<Book> findAllBooks() {
         return bookRepository.findAll();
     }
 
-    public Iterable<Author> findAllAuthors(Long id, DataFetchingEnvironment dataFetchingEnvironment) {
-        if (id == null) {
-
-            return authorRepository.findAll();
-        } else {
-            List<Author> authorList = new ArrayList<>();
-
-            Optional<Author> byId = authorRepository.findById(id);
-            authorList.add(byId.get());
-            return authorList;
-        }
+    public Iterable<Book> findBookById(final Long id) {
+        return Arrays.asList(bookRepository.findById(id).get());
     }
 
-    public long countBooks(DataFetchingEnvironment dataFetchingEnvironment) {
+    public Iterable<Author> findAllAuthors() {
+        return authorRepository.findAll();
+    }
+
+    public Iterable<Author> findAuthorById(final Long id) {
+        return Arrays.asList(authorRepository.findById(id).get());
+
+    }
+
+    public long countBooks(final DataFetchingEnvironment dataFetchingEnvironment) {
         return bookRepository.count();
     }
-    public long countAuthors(DataFetchingEnvironment dataFetchingEnvironment) {
+
+    public long countAuthors(final DataFetchingEnvironment dataFetchingEnvironment) {
         return authorRepository.count();
     }
 }
